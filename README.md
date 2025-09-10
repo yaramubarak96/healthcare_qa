@@ -1,3 +1,7 @@
+
+# Results 
+Look at evaluations.ipynb notebook, it will have batch running, scoring and final results for 400 examples 
+
 # CHOICES
 
 ## Naming 
@@ -89,6 +93,3 @@ curl -X POST http://localhost:8000/pulse/answer \
        "query": "What are the symptoms of a UTI?"
      }'
 ``` 
-
-# Results 
-Look at evaluations.ipynb notebook, it will have batch running, scoring and final results for 400 examples 
