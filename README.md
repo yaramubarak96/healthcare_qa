@@ -1,72 +1,59 @@
-# Pulse - Healthcare Q&A Agents
+# CHOICES
 
-*Edgy, cool, simple. Feel the pulse?*
+## Naming 
+My repo name will be called: 
+pulse... edgy, cool, simple. Feel the pulse? 
 
-A healthcare agents project with ML screening capabilities using sequential web search and summarization agents.
+## Model Choice:
+- two agents ( web research --> summary ), sequential and simple 
+- did not put the web research in the same tool as summary because I would like flexibility in how the research is done 
+- could add a judgement model on top for future reference 
+- OPENAI agents allows you to easily add guardrails, I would do that to add checks for question and answer safety
+- For future I would like to finetune summary model for better clinical language and to match the tone/brevity/style of our desired output 
+- I noticed our dataset has multiple different responses to the same questions... in different styles. That will affect our scoring and we would probably have to clean that to our desired response after cleaning.
 
-## Architecture Design
+## Evaluation Choices:
+https://huggingface.co/docs/evaluate/index
+- Traditional: BLEU (precision based), ROUGE (recall based), METEOR (~F1)
 
-### Model Choice
-- **Two-agent architecture**: Web research → Summary (sequential and simple)
-- **Separation of concerns**: Web research and summary are separate tools for flexibility
-- **Future enhancements**: 
-  - Add judgment model on top for quality assessment
-  - Implement guardrails for question and answer safety checks
-  - Fine-tune summary model for clinical language matching our dataset's tone/brevity/style
+I'd like to evaluate exact language achievement of the model because we have golden examples for each user query. 
+This is also clinical language and exact language matters a lot. 
 
-### Dataset Observations
-Our dataset contains multiple different responses to the same questions in varying styles. This will affect scoring and may require response cleaning to achieve our desired output format.
+I also would like to take a look at BLEURT:
+https://huggingface.co/spaces/evaluate-metric/bleurt
+which would take care of semantic similarity but I'd like to finetune that. 
+My current laptop crashes when I try to even use it, so that's out for now. 
 
-## Evaluation Strategy
+Given more budget (I do not have enough llm credits):
+https://www.confident-ai.com/blog/llm-evaluation-metrics-everything-you-need-for-llm-evaluation
+- Safety: do not give unsubstantiated advice or answer dangerous questions (suicide, emergency questions...) 
+- Faithfulness: (if supported has medical journals, or only trusted sites, I would like to make sure only those are pulled from).
 
-### Traditional Metrics
-Reference: [Hugging Face Evaluate Documentation](https://huggingface.co/docs/evaluate/index)
-- **BLEU**: Precision-based evaluation
-- **ROUGE**: Recall-based evaluation  
-- **METEOR**: F1-like metric
+## Code choices:
 
-### Advanced Metrics
-- **BLEURT**: [Semantic similarity evaluation](https://huggingface.co/spaces/evaluate-metric/bleurt)
-  - Would benefit from fine-tuning for medical domain
-  - Currently limited by hardware constraints
+### Agent library: 
+chose openAI Agents (https://medium.com/@elisowski/top-ai-agent-frameworks-in-2025-9bcedab2e239): 
+- simple
+- lightweight 
+- has built in web agents (useful :))
+- I have openAI developer credits (fantastic...)
+- only works for sequential stuff (which I am doing)
 
-### Evaluation Goals
-We prioritize exact language achievement evaluation since we have golden examples for each user query. Clinical language precision is critical where exact language matters significantly.
+## Eval library 
+Evaluate: for non-llm metrics... Easy to use, has traditional metrics. 
 
-### Future Evaluations (Budget Permitting)
-Reference: [LLM Evaluation Metrics Guide](https://www.confident-ai.com/blog/llm-evaluation-metrics-everything-you-need-for-llm-evaluation)
-- **Safety**: Prevent unsubstantiated advice or dangerous responses (suicide, emergency questions)
-- **Faithfulness**: Ensure information sourcing from trusted medical journals and verified sites only
+Deepeval: for llm metrics like faithfulness and safety and any llm as a judge metrics, and can be built into pytests :) 
 
-## Technology Stack
+## Deployment choices: 
+- serverless 
+  - no memory needed
+  - I assume this traffic is cyclical and predictable so cold start wont be an issue
 
-### Agent Framework: OpenAI Agents
-**Why OpenAI Agents?** ([Reference](https://medium.com/@elisowski/top-ai-agent-frameworks-in-2025-9bcedab2e239))
-- Simple and lightweight architecture
-- Built-in web agents functionality
-- Available OpenAI developer credits
-- Perfect for sequential workflows
-- Easy guardrail implementation
-
-### Evaluation Libraries
-- **Evaluate**: Non-LLM metrics with traditional evaluation methods
-- **ROUGE-Score**: Recall-based text evaluation
-- **BLEURT**: Learned evaluation metrics
-- **NLTK**: Text processing and tokenization
-
-### Deployment Strategy
-- **Serverless architecture**
-  - No memory requirements
-  - Assumes cyclical and predictable traffic patterns
-  - Cold start not expected to be an issue
-
-## Development Notes
-
-*AI assistance used for:*
-- README formatting (not content creation)
-- pyproject.toml setup
-- FastAPI skeleton structure
-- .gitignore creation and initial commit 
+## I used AI to: 
+- format this readme (not write but format)
+- Setup my pyproject file 
+- write fastapi skeleton
+- write my gitignore and push my first commit 
 
 # Setup 
 
