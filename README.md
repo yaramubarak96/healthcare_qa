@@ -1,56 +1,72 @@
-# CHOICES
+# Pulse - Healthcare Q&A Agents
 
-## Naming 
-My repo name will be called: 
-pulse... edgy, cool, simple. Feel the pulse? 
+*Edgy, cool, simple. Feel the pulse?*
 
-## Model Choice:
-- two agents ( web research --> summary ), sequential and simple 
-- did not put the web research in the same tool as summary because I would like flexibility in how the research is done 
-- could add a judgement model on top for future reference 
-- For future I would like to finetune summary model for better clinincal language and to match the tone/brevity/style of our dataset
+A healthcare agents project with ML screening capabilities using sequential web search and summarization agents.
 
-## Evaluation Choices:
-https://huggingface.co/docs/evaluate/index
-- Traditional: Bleu (preicison based), rouge (recall based), METEOR (~F1)
+## Architecture Design
 
-I'd like to evaluate exact language acheival of the model because we have golden examples for each user query. 
-This is also clinical lagnuage and exact language matters a lot. 
+### Model Choice
+- **Two-agent architecture**: Web research → Summary (sequential and simple)
+- **Separation of concerns**: Web research and summary are separate tools for flexibility
+- **Future enhancements**: 
+  - Add judgment model on top for quality assessment
+  - Implement guardrails for question and answer safety checks
+  - Fine-tune summary model for clinical language matching our dataset's tone/brevity/style
 
-I also would like to take a look at BLEURT:
-https://huggingface.co/spaces/evaluate-metric/bleurt
-which would take care of semantic similarity but I'd like to finetune that. 
-My current laptop crashes when I try to even use it, so that's out for now. 
+### Dataset Observations
+Our dataset contains multiple different responses to the same questions in varying styles. This will affect scoring and may require response cleaning to achieve our desired output format.
 
-Given more budget (I do not have enough llm credits):
-https://www.confident-ai.com/blog/llm-evaluation-metrics-everything-you-need-for-llm-evaluation
-- Safety: do not give unsubstantiated advice or answer dangerous questions (suicide, emergency questions...) 
-- Faithefulness: (if supported has medical journals, or only trusted sites, I would like to make sure only those are pulled from).
+## Evaluation Strategy
 
-## Code choices:
+### Traditional Metrics
+Reference: [Hugging Face Evaluate Documentation](https://huggingface.co/docs/evaluate/index)
+- **BLEU**: Precision-based evaluation
+- **ROUGE**: Recall-based evaluation  
+- **METEOR**: F1-like metric
 
-### Agent library: 
-chose openAI Agents (https://medium.com/@elisowski/top-ai-agent-frameworks-in-2025-9bcedab2e239): 
-- simple
-- lightweight 
-- has built in web agents (useful :))
-- I have openAI developer credits (fantastic...)
-- only works for sequential stuff (which I am doing)
+### Advanced Metrics
+- **BLEURT**: [Semantic similarity evaluation](https://huggingface.co/spaces/evaluate-metric/bleurt)
+  - Would benefit from fine-tuning for medical domain
+  - Currently limited by hardware constraints
 
-## Eval library 
-Evaluate for non-llm metrics... Easy to use, has traditional metrics
-Deepval for llm metrics like faithfullness and safety and any llm as a judge metrics, and can be built into pytests :) 
+### Evaluation Goals
+We prioritize exact language achievement evaluation since we have golden examples for each user query. Clinical language precision is critical where exact language matters significantly.
 
-## Deployment choices: 
-- serverless 
-  - no memory needed
-  - I assume this traffic is cyclical and predictable so cold start wont be an issue
+### Future Evaluations (Budget Permitting)
+Reference: [LLM Evaluation Metrics Guide](https://www.confident-ai.com/blog/llm-evaluation-metrics-everything-you-need-for-llm-evaluation)
+- **Safety**: Prevent unsubstantiated advice or dangerous responses (suicide, emergency questions)
+- **Faithfulness**: Ensure information sourcing from trusted medical journals and verified sites only
 
-## I used AI to: 
-- format this readme (not write but format)
-- Setup my pyproject file 
-- write fastapi skeleton
+## Technology Stack
 
+### Agent Framework: OpenAI Agents
+**Why OpenAI Agents?** ([Reference](https://medium.com/@elisowski/top-ai-agent-frameworks-in-2025-9bcedab2e239))
+- Simple and lightweight architecture
+- Built-in web agents functionality
+- Available OpenAI developer credits
+- Perfect for sequential workflows
+- Easy guardrail implementation
+
+### Evaluation Libraries
+- **Evaluate**: Non-LLM metrics with traditional evaluation methods
+- **ROUGE-Score**: Recall-based text evaluation
+- **BLEURT**: Learned evaluation metrics
+- **NLTK**: Text processing and tokenization
+
+### Deployment Strategy
+- **Serverless architecture**
+  - No memory requirements
+  - Assumes cyclical and predictable traffic patterns
+  - Cold start not expected to be an issue
+
+## Development Notes
+
+*AI assistance used for:*
+- README formatting (not content creation)
+- pyproject.toml setup
+- FastAPI skeleton structure
+- .gitignore creation and initial commit 
 
 # Setup 
 
@@ -86,3 +102,6 @@ curl -X POST http://localhost:8000/pulse/answer \
        "query": "What are the symptoms of a UTI?"
      }'
 ``` 
+
+# Results 
+Look at evaluations.ipynb notebook, it will have batch running, scoring and final results for 400 examples 
